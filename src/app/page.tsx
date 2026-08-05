@@ -1,13 +1,15 @@
+import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { siteConfig } from "@/config/site";
+import { siteConfig, visibleServices } from "@/config/site";
 import VMark from "@/components/VMark";
 import TrustBand from "@/components/TrustBand";
+import heroBg from "../../public/hero-image.webp";
 
 export const metadata: Metadata = {
   title: siteConfig.brand.tagline,
   description:
-    "Employment background screening, drug testing, and verification services designed for accuracy, compliance, and speed.",
+    "Employment background screening and verification services designed for accuracy, compliance, and speed.",
 };
 
 const steps = [
@@ -52,50 +54,60 @@ function ShieldIcon() {
 }
 
 export default function Home() {
+  // Split "Hire with confidence. Verify with speed." so the two sentences
+  // can break onto separate lines on desktop without a hardcoded <br> that
+  // would also fire (and cause overflow risk) on mobile.
+  const [taglineLine1, taglineLine2] = siteConfig.brand.tagline.split(". ");
+
   return (
     <>
       {/* Hero */}
       <section className="relative isolate overflow-hidden bg-surface-inverted">
-        {/* Layered gradient wash */}
+        {/* Full-bleed hero artwork — LCP element */}
+        <Image
+          src={heroBg}
+          alt=""
+          aria-hidden="true"
+          fill
+          priority
+          sizes="100vw"
+          className="-z-10 object-cover object-[20%_center] sm:object-center"
+        />
+        {/* Left-to-right scrim: keeps the copy column legible against the
+            artwork no matter how object-fit: cover crops at a given
+            viewport (see .hero-scrim in globals.css). */}
         <div
           aria-hidden="true"
-          className="bg-hero-wash pointer-events-none absolute inset-0"
-        />
-        {/* Faint geometric grid */}
-        <div
-          aria-hidden="true"
-          className="bg-grid-lines pointer-events-none absolute inset-0 text-content-inverted opacity-watermark"
-        />
-        {/* Oversized V watermark, bleeding off the top-right edge */}
-        <VMark
-          className="pointer-events-none absolute -right-24 -top-28 h-[70vw] w-[70vw] max-h-[620px] max-w-[620px] text-content-inverted opacity-watermark sm:-right-32 sm:-top-32"
+          className="hero-scrim pointer-events-none absolute inset-0 -z-10"
         />
 
-        <div className="relative mx-auto flex min-h-[70vh] max-w-6xl flex-col justify-center px-4 py-band-xl sm:px-6 lg:min-h-[85vh] lg:px-8">
-          <div className="max-w-2xl">
+        <div className="relative mx-auto flex min-h-[calc(var(--viewport-h)-var(--header-h))] max-w-6xl flex-col justify-center px-4 py-band-xl sm:px-6 lg:px-8">
+          <div className="max-w-xl sm:max-w-[min(34rem,calc(50vw-2rem))]">
             <p className="text-sm font-semibold uppercase tracking-[0.2em] text-accent">
               {siteConfig.brand.name}
             </p>
-            <h1 className="mt-4 font-serif text-5xl font-semibold text-content-inverted sm:text-6xl lg:text-7xl">
-              {siteConfig.brand.tagline}
+            <h1 className="mt-4 font-serif text-5xl font-semibold text-content-inverted lg:text-[2.9rem]">
+              {taglineLine1}.
+              <br className="hidden lg:block" /> {taglineLine2}
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-content-inverted-muted">
-              {siteConfig.brand.name} delivers background screening, drug
-              testing, and verification services built around accuracy,
-              compliance, and a hiring process you can stand behind.
+              {siteConfig.brand.name} delivers background screening and
+              verification services built around accuracy, compliance, and a
+              hiring process you can stand behind.
             </p>
             <div className="mt-10 flex flex-col gap-4 sm:flex-row">
               <Link
-                href="/contact"
+                href={siteConfig.LOGIN_URL}
+                rel="noopener"
                 className="inline-flex items-center justify-center rounded-control bg-accent px-6 py-3 text-sm font-semibold text-on-accent transition-colors duration-200 hover:bg-accent-hover"
               >
-                Get a Free Consultation
+                Start a Background Check
               </Link>
               <Link
-                href="/services"
+                href="/contact"
                 className="inline-flex items-center justify-center rounded-control border border-white/30 px-6 py-3 text-sm font-semibold text-content-inverted transition-colors duration-200 hover:border-white hover:bg-white/5"
               >
-                View Services
+                Talk to Our Team
               </Link>
             </div>
           </div>
@@ -115,8 +127,8 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {siteConfig.services.map((service, index) => (
+          <div className="mx-auto mt-12 grid max-w-3xl grid-cols-1 gap-6 sm:grid-cols-2">
+            {visibleServices.map((service, index) => (
               <Link
                 key={service.slug}
                 href={`/services#${service.slug}`}
@@ -193,10 +205,11 @@ export default function Home() {
             Ready to build a screening program that fits your team?
           </h2>
           <Link
-            href="/contact"
+            href={siteConfig.LOGIN_URL}
+            rel="noopener"
             className="inline-flex shrink-0 items-center justify-center rounded-control bg-accent px-6 py-3 text-sm font-semibold text-on-accent transition-colors duration-200 hover:bg-accent-hover"
           >
-            Get a Free Consultation
+            Start a Background Check
           </Link>
         </div>
       </section>

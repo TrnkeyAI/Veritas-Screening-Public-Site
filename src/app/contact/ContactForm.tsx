@@ -1,7 +1,7 @@
 "use client";
 
 import { useId, useState, type FormEvent } from "react";
-import { siteConfig } from "@/config/site";
+import { visibleServices } from "@/config/site";
 
 type FormStatus = "idle" | "submitting" | "success" | "error";
 
@@ -193,7 +193,7 @@ export default function ContactForm() {
           className={inputClass(Boolean(errors.service))}
         >
           <option value="">Select a service&hellip;</option>
-          {siteConfig.services.map((service) => (
+          {visibleServices.map((service) => (
             <option key={service.slug} value={service.title}>
               {service.title}
             </option>

@@ -93,13 +93,12 @@ const stats = [
  * membership, certification, client count, testimonial, rating, or
  * statistic. Every placeholder must be replaced with a verified fact
  * supplied by the client before launch.
- */
-/**
- * NOTE TO CLIENT / DEV: This component is gated by
+ *
+ * NOTE TO CLIENT / DEV: Rendering is gated by
  * `siteConfig.sections.showTrustBadges` and `showStats`. Both default to
  * false so nothing below ever renders with invented content. Flip the
- * flags in `src/config/site.ts` only once VERIFIED content exists —
- * the PLACEHOLDER copy below stays in source either way.
+ * flags in `src/config/site.ts` only once VERIFIED content exists — the
+ * PLACEHOLDER copy above stays in source either way.
  */
 export default function TrustBand({ variant = "full", className = "" }: TrustBandProps) {
   const compact = variant === "compact";

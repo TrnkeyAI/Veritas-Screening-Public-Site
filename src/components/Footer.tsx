@@ -69,20 +69,30 @@ export default function Footer() {
               Contact
             </h2>
             <ul className="mt-4 space-y-2 text-sm text-content-inverted-muted">
-              <li>{siteConfig.contact.phone}</li>
-              <li>{siteConfig.contact.email}</li>
-              <li>{siteConfig.contact.hours}</li>
+              <li>
+                <a
+                  href={`tel:${siteConfig.contact.phone.replace(/[^\d+]/g, "")}`}
+                  className="transition-colors hover:text-content-inverted"
+                >
+                  {siteConfig.contact.phone}
+                </a>
+              </li>
+              <li>
+                <a
+                  href={`mailto:${siteConfig.contact.email}`}
+                  className="transition-colors hover:text-content-inverted"
+                >
+                  {siteConfig.contact.email}
+                </a>
+              </li>
               <li>{siteConfig.contact.address}</li>
             </ul>
           </div>
         </div>
 
         <div className="mt-10 border-t border-white/10 pt-6">
-          <p className="text-xs leading-relaxed text-content-inverted-subtle">
-            [[PLACEHOLDER: legal disclosure / CRA statement]]
-          </p>
-          <p className="mt-4 text-xs text-content-inverted-subtle">
-            &copy; {year} {siteConfig.brand.name}. All rights reserved.
+          <p className="text-xs text-content-inverted-subtle">
+            &copy; {year} {siteConfig.brand.name}. All Rights Reserved.
           </p>
         </div>
       </div>

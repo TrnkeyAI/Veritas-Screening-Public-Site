@@ -1,12 +1,12 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { siteConfig } from "@/config/site";
+import { siteConfig, visibleServices } from "@/config/site";
 import TrustBand from "@/components/TrustBand";
 
 export const metadata: Metadata = {
   title: "Services",
   description:
-    "Employment screening, volunteer screening, drug testing, executive screening, motor vehicle records, and international searches.",
+    "Employment screening and volunteer screening, each built from standard industry search components and configurable to your program.",
 };
 
 export default function ServicesPage() {
@@ -19,8 +19,8 @@ export default function ServicesPage() {
               Services
             </h1>
             <p className="mt-4 text-lg leading-relaxed text-content-muted">
-              Six screening product lines, each built from standard industry
-              search components and configurable to your program.
+              Screening product lines built from standard industry search
+              components and configurable to your program.
             </p>
           </div>
         </div>
@@ -34,7 +34,7 @@ export default function ServicesPage() {
               aria-label="Service sections"
               className="flex gap-2 overflow-x-auto border-b border-border pb-4 lg:sticky lg:top-24 lg:w-64 lg:shrink-0 lg:flex-col lg:gap-1 lg:overflow-visible lg:border-b-0 lg:pb-0"
             >
-              {siteConfig.services.map((service) => (
+              {visibleServices.map((service) => (
                 <a
                   key={service.slug}
                   href={`#${service.slug}`}
@@ -46,7 +46,7 @@ export default function ServicesPage() {
             </nav>
 
             <div className="flex min-w-0 flex-1 flex-col gap-6">
-              {siteConfig.services.map((service, index) => (
+              {visibleServices.map((service, index) => (
                 <section
                   key={service.slug}
                   id={service.slug}
@@ -108,10 +108,11 @@ export default function ServicesPage() {
             together the right package.
           </p>
           <Link
-            href="/contact"
+            href={siteConfig.LOGIN_URL}
+            rel="noopener"
             className="mt-6 inline-flex items-center justify-center rounded-control bg-accent px-6 py-3 text-sm font-semibold text-on-accent transition-colors duration-200 hover:bg-accent-hover"
           >
-            Get a Free Consultation
+            Start a Background Check
           </Link>
         </div>
       </section>

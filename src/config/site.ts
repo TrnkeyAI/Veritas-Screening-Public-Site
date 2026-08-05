@@ -36,13 +36,19 @@ export type SiteConfig = {
     /** Accessible name for the logo link/image, site-wide. */
     alt: string;
   };
-  /**
-   * TODO: replace with the client's existing app URL (external).
-   * The "Log In" button in the header points here.
-   */
+  /** The client's screening-platform app. The "Log In" button and the
+   *  primary CTA both point here — external, opens in the same tab. */
   LOGIN_URL: string;
   nav: NavItem[];
   services: Service[];
+  /** Contact form provider. "builtin" renders the in-repo <ContactForm />;
+   *  "ghl" renders a GoHighLevel embed iframe at `ghlEmbedUrl`. Switch to
+   *  "ghl" once the embed URL is supplied — see README for the third-party
+   *  cookie/consent note that switch requires. */
+  contactForm: {
+    provider: "builtin" | "ghl";
+    ghlEmbedUrl: string;
+  };
   contact: {
     /** [[PLACEHOLDER: phone number]] */
     phone: string;
@@ -52,8 +58,6 @@ export type SiteConfig = {
     disputeEmail: string;
     /** [[PLACEHOLDER: consumer/dispute intake phone]] */
     disputePhone: string;
-    /** [[PLACEHOLDER: business hours]] */
-    hours: string;
     /** [[PLACEHOLDER: mailing / office address]] */
     address: string;
   };
@@ -75,6 +79,14 @@ export type SiteConfig = {
     /** Leadership team section on /about. Flip to true once the client
      *  supplies real leadership bios. */
     showLeadership: boolean;
+    /** Executive & Partner Screening service card/section. The client has
+     *  NOT confirmed they still offer this — flip to true only once they
+     *  confirm delivery. */
+    showExecutiveScreening: boolean;
+    /** International Searches service card/section. The client has NOT
+     *  confirmed they still offer this — flip to true only once they
+     *  confirm delivery. */
+    showInternationalSearches: boolean;
   };
 };
 
@@ -91,7 +103,7 @@ export const siteConfig: SiteConfig = {
     icon: { src: "/icon.png", width: 512, height: 512 },
     alt: "Veritas Screening",
   },
-  LOGIN_URL: "/login", // TODO: replace with the client's existing app URL (external)
+  LOGIN_URL: "https://app.veritas-screening.com",
   nav: [
     { label: "Services", href: "/services" },
     { label: "About", href: "/about" },
@@ -131,20 +143,6 @@ export const siteConfig: SiteConfig = {
       ],
     },
     {
-      slug: "drug-testing",
-      title: "Drug Testing",
-      intro:
-        "Pre-employment, random, and reasonable-suspicion drug and alcohol testing coordinated through a nationwide collection network.",
-      searches: [
-        "5-panel and 10-panel urine drug screens",
-        "Instant and lab-based testing",
-        "Alcohol testing (breath and urine)",
-        "DOT-regulated testing programs",
-        "Random testing pool management",
-        "Chain-of-custody documentation",
-      ],
-    },
-    {
       slug: "executive-partner-screening",
       title: "Executive & Partner Screening",
       intro:
@@ -157,19 +155,6 @@ export const siteConfig: SiteConfig = {
         "Media and adverse-news search",
         "Directorship and business affiliation search",
         "Education and credential verification",
-      ],
-    },
-    {
-      slug: "motor-vehicle-records",
-      title: "Motor Vehicle Records",
-      intro:
-        "Driving history reports for roles where operating a vehicle is part of the job, with ongoing monitoring options.",
-      searches: [
-        "State motor vehicle record (MVR) pull",
-        "Driver's license verification",
-        "Commercial driver's license (CDL) verification",
-        "Violation and accident history",
-        "Continuous MVR monitoring",
       ],
     },
     {
@@ -186,13 +171,16 @@ export const siteConfig: SiteConfig = {
       ],
     },
   ],
+  contactForm: {
+    provider: "builtin",
+    ghlEmbedUrl: "",
+  },
   contact: {
-    phone: "[[PLACEHOLDER: phone number]]",
-    email: "[[PLACEHOLDER: general inquiries email]]",
+    phone: "+1 205 500 9053",
+    email: "shawn@trnkeyai.com",
     disputeEmail: "[[PLACEHOLDER: dispute intake email]]",
     disputePhone: "[[PLACEHOLDER: dispute intake phone]]",
-    hours: "[[PLACEHOLDER: business hours]]",
-    address: "[[PLACEHOLDER: mailing / office address]]",
+    address: "3219 Bay Estates Circle, Miramar Beach, Florida 32550, United States",
   },
   sections: {
     /** Accreditation/affiliation badge row. Flip to true once the client
@@ -202,5 +190,28 @@ export const siteConfig: SiteConfig = {
     showStats: false,
     /** Leadership team section on /about. */
     showLeadership: false,
+    /** Executive & Partner Screening service. Confirmed offered by the client. */
+    showExecutiveScreening: true,
+    /** International Searches service. Confirmed offered by the client. */
+    showInternationalSearches: true,
   },
 };
+
+/** Services gated behind an unconfirmed `sections` flag, keyed by slug. */
+const GATED_SERVICE_FLAGS: Record<string, keyof SiteConfig["sections"]> = {
+  "executive-partner-screening": "showExecutiveScreening",
+  "international-searches": "showInternationalSearches",
+};
+
+/**
+ * The services that should actually render. Every consumer (home grid,
+ * /services anchor nav + sections, ContactForm's "service of interest"
+ * select) reads this instead of `siteConfig.services` directly, so they
+ * can never drift apart when a flag flips.
+ */
+export const visibleServices: Service[] = siteConfig.services.filter(
+  (service) => {
+    const flag = GATED_SERVICE_FLAGS[service.slug];
+    return flag === undefined || siteConfig.sections[flag];
+  },
+);

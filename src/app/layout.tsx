@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     template: `%s | ${siteConfig.brand.name}`,
   },
   description:
-    "Employment background screening and drug testing built for accuracy, compliance, and speed.",
+    "Employment background screening built for accuracy, compliance, and speed.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

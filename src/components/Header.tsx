@@ -80,13 +80,8 @@ export default function Header() {
 
         <div className="hidden items-center gap-4 md:flex">
           <Link
-            href="/contact"
-            className="text-sm font-medium text-content transition-colors hover:text-content-strong"
-          >
-            Contact Us
-          </Link>
-          <Link
             href={siteConfig.LOGIN_URL}
+            rel="noopener"
             className="rounded-control border border-content-strong px-4 py-2 text-sm font-medium text-content-strong transition-colors hover:bg-surface-inverted hover:text-content-inverted"
           >
             Log In
@@ -150,14 +145,8 @@ export default function Header() {
               </Link>
             ))}
             <Link
-              href="/contact"
-              className="border-b border-border-subtle py-3 text-base font-medium text-content hover:text-content-strong"
-              onClick={() => setOpen(false)}
-            >
-              Contact Us
-            </Link>
-            <Link
               href={siteConfig.LOGIN_URL}
+              rel="noopener"
               className="mt-4 rounded-control border border-content-strong px-4 py-3 text-center text-base font-medium text-content-strong hover:bg-surface-inverted hover:text-content-inverted"
               onClick={() => setOpen(false)}
             >

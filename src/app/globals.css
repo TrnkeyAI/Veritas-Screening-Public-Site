@@ -53,6 +53,23 @@
   /* One focus-ring color that clears 3:1 against every surface in the
      app, including the two blended ones on /contact (see below). */
   --focus-ring: #378ec8;
+
+  /* Sticky header's rendered height (Header.tsx: h-16 content + 1px
+     border-b) — exposed so the hero can size itself to exactly the
+     remaining viewport instead of overlapping or falling short. */
+  --header-h: 4.0625rem;
+
+  /* Viewport-height unit for the hero: dvh where supported (avoids the
+     mobile URL-bar collapse pushing content under the fold), falling
+     back to vh in browsers without dvh support. No literal in the .tsx
+     — components reference --viewport-h only. */
+  --viewport-h: 100vh;
+}
+
+@supports (height: 100dvh) {
+  :root {
+    --viewport-h: 100dvh;
+  }
 }
 
 @theme inline {
@@ -158,23 +175,42 @@ body {
   outline-offset: 2px;
 }
 
-/* Faint geometric grid, used sparingly behind the home hero. Purely
-   decorative — always paired with aria-hidden in markup. */
-.bg-grid-lines {
-  background-image:
-    linear-gradient(to right, currentColor 1px, transparent 1px),
-    linear-gradient(to bottom, currentColor 1px, transparent 1px);
-  background-size: 44px 44px;
+/* Hero background scrim — protects the copy column against the full-bleed
+   hero artwork (public/hero-image.webp). Measured: over the left 50% of the
+   raw image, the 99th-percentile pixel (profile card / ID tile / glowing
+   grid dots) is only 2.21:1 against white text, so the scrim must reach
+   ~80% surface-inverted to hold 4.5:1 there. Opaque-ish on the left through
+   the copy column, fading to fully transparent by ~58% so the right-hand
+   artwork (profile card, shield, icon tiles, database cylinders) stays
+   crisp and unmuted. Built from theme tokens via color-mix(), no color
+   literal. */
+.hero-scrim {
+  background-image: linear-gradient(
+    to right,
+    color-mix(in srgb, var(--color-surface-inverted) 90%, transparent) 0%,
+    color-mix(in srgb, var(--color-surface-inverted) 85%, transparent) 30%,
+    color-mix(in srgb, var(--color-surface-inverted) 80%, transparent) 50%,
+    transparent 58%
+  );
 }
 
-/* Hero gradient wash — was three inline rgba() literals on page.tsx.
-   Built from theme tokens via color-mix() so no color literal survives
-   in any .tsx file. */
-.bg-hero-wash {
-  background-image:
-    radial-gradient(ellipse 70% 55% at 15% 0%, color-mix(in srgb, var(--color-accent) 12%, transparent), transparent),
-    radial-gradient(ellipse 60% 50% at 100% 100%, color-mix(in srgb, white 6%, transparent), transparent),
-    linear-gradient(180deg, color-mix(in srgb, var(--color-surface-inverted) 0%, transparent) 0%, color-mix(in srgb, var(--color-surface-inverted) 40%, transparent) 100%);
+/* Mobile: the copy column runs the full viewport width (no fade-out room
+   like desktop), and object-fit: cover crops toward the frame's centre by
+   default — pulling the profile card and shield in behind four lines of
+   headline. object-position is shifted left in the markup to favour the
+   image's empty dark-purple field instead, so this scrim can stay lighter
+   than a flat worst-case cover: enough to clear 4.5:1 across the text
+   column while still letting the artwork's shapes read through. */
+@media (max-width: 767px) {
+  .hero-scrim {
+    background-image: linear-gradient(
+      to right,
+      color-mix(in srgb, var(--color-surface-inverted) 90%, transparent) 0%,
+      color-mix(in srgb, var(--color-surface-inverted) 87%, transparent) 40%,
+      color-mix(in srgb, var(--color-surface-inverted) 82%, transparent) 75%,
+      color-mix(in srgb, var(--color-surface-inverted) 75%, transparent) 100%
+    );
+  }
 }
 
 /*

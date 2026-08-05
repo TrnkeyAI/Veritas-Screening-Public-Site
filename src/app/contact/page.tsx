@@ -27,7 +27,15 @@ export default function ContactPage() {
 
           <div className="mt-12 grid grid-cols-1 gap-8 lg:grid-cols-3 lg:gap-10">
             <div className="rounded-panel bg-surface p-6 shadow-xl sm:p-8 lg:col-span-2">
-              <ContactForm />
+              {siteConfig.contactForm.provider === "ghl" ? (
+                <iframe
+                  title="Contact form"
+                  src={siteConfig.contactForm.ghlEmbedUrl}
+                  className="h-[720px] w-full rounded-control border-0"
+                />
+              ) : (
+                <ContactForm />
+              )}
             </div>
 
             <aside
@@ -39,7 +47,12 @@ export default function ContactPage() {
                   Phone
                 </h2>
                 <p className="mt-2 text-sm text-white/90">
-                  {siteConfig.contact.phone}
+                  <a
+                    href={`tel:${siteConfig.contact.phone.replace(/[^\d+]/g, "")}`}
+                    className="transition-colors hover:text-content-inverted"
+                  >
+                    {siteConfig.contact.phone}
+                  </a>
                 </p>
               </div>
               <div>
@@ -47,15 +60,12 @@ export default function ContactPage() {
                   Email
                 </h2>
                 <p className="mt-2 text-sm text-white/90">
-                  {siteConfig.contact.email}
-                </p>
-              </div>
-              <div>
-                <h2 className="text-xs font-semibold uppercase tracking-wide text-accent">
-                  Hours
-                </h2>
-                <p className="mt-2 text-sm text-white/90">
-                  {siteConfig.contact.hours}
+                  <a
+                    href={`mailto:${siteConfig.contact.email}`}
+                    className="transition-colors hover:text-content-inverted"
+                  >
+                    {siteConfig.contact.email}
+                  </a>
                 </p>
               </div>
               <div>
