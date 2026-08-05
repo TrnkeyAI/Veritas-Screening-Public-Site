@@ -1,0 +1,209 @@
+@import "tailwindcss";
+
+/*
+ * Token architecture — two layers.
+ *
+ * 1. Primitives (below, in :root under non `--color-*` names) generate no
+ *    Tailwind utilities. They exist only to be referenced by the semantic
+ *    layer in @theme inline.
+ * 2. Semantics (in @theme inline) are the ONLY names permitted in markup.
+ *    Every `bg-*` / `text-*` / `border-*` class in this codebase must
+ *    resolve to a semantic token — never a primitive, never a raw hex.
+ *
+ * Brand palette: #FFC857 yellow · #E9724C orange · #C5283D red ·
+ * #311847 purple (dominant dark surface) · #255F85 blue (supporting,
+ * buttons/links). Red is error/destructive only — never brand chrome.
+ */
+:root {
+  --background: #ffffff;
+  --foreground: #412d53;
+
+  /* Ink ramp — hue 272°, anchored on the brand purple #311847. Saturation
+     tapers at both ends so light steps read as warm off-white and dark
+     steps read as ink, not violet. */
+  --ink-50: #f9f7fa;
+  --ink-100: #f2eff5;
+  --ink-200: #e6e0eb;
+  --ink-300: #cdc3d5;
+  --ink-400: #a292af;
+  --ink-450: #8d7c9c; /* first step legal as a form-control boundary, WCAG 1.4.11 (3.82 on white) */
+  --ink-500: #79628d; /* muted text step (5.32 on white) */
+  --ink-600: #604677;
+  --ink-700: #412d53; /* body text (12.17 on white) */
+  --ink-900: #311847; /* anchor — the brand purple */
+  --ink-950: #1d0c2c;
+
+  /* Blue — hue 204°, the supporting interactive color. */
+  --blue-300: #78b2d9; /* links on dark (6.78 on #311847) */
+  --blue-600: #255f85; /* given brand blue (6.88 on white) */
+  --blue-700: #1c4a69; /* hover */
+
+  /* Orange — warm accent-button hover + narrow editorial-ornament role. */
+  --orange-500: #e9724c; /* given brand orange */
+  --orange-600: #c34b22; /* first step legal as normal text on light (4.83 on white) */
+
+  /* Critical — error/destructive only. Never brand chrome. */
+  --critical-50: #fcedef;
+  --critical-500: #c5283d; /* given brand red (5.61 on white) */
+  --critical-700: #8d1b2a;
+
+  /* Yellow — the brand accent. Legible only on inverted surfaces. */
+  --yellow-400: #ffc857;
+
+  /* One focus-ring color that clears 3:1 against every surface in the
+     app, including the two blended ones on /contact (see below). */
+  --focus-ring: #378ec8;
+}
+
+@theme inline {
+  /* --- Surfaces --- */
+  --color-surface: #ffffff;
+  --color-surface-sunken: var(--ink-50);
+  --color-surface-inverted: var(--ink-900);
+  --color-surface-inverted-hover: var(--ink-700);
+  --color-surface-critical: var(--critical-50);
+
+  /* --- Borders (WCAG 1.4.11 applies only to -control and -critical;
+     the rest are decorative separators, intentionally <3:1) --- */
+  --color-border-subtle: var(--ink-100);
+  --color-border: var(--ink-200);
+  --color-border-strong: var(--ink-300);
+  --color-border-control: var(--ink-450);
+  --color-border-critical: var(--critical-500);
+
+  /* --- Content (text) on light surfaces --- */
+  --color-content: var(--ink-700);
+  --color-content-strong: var(--ink-900);
+  --color-content-muted: var(--ink-500);
+  --color-content-critical: var(--critical-500);
+
+  /* --- Content (text) on inverted (dark) surfaces --- */
+  --color-content-inverted: #ffffff;
+  --color-content-inverted-muted: var(--ink-300);
+  --color-content-inverted-subtle: var(--ink-400);
+
+  /* --- Interactive (blue) — links, clickable-card affordances, and the
+     one blue button (the white-card contact-form submit) --- */
+  --color-interactive: var(--blue-600);
+  --color-interactive-hover: var(--blue-700);
+  --color-interactive-inverted: var(--blue-300);
+  --color-interactive-inverted-hover: #ffffff;
+  --color-on-interactive: #ffffff;
+
+  /* --- Accent (yellow) — inverted surfaces ONLY. Never crosses to a
+     light surface: yellow is 1.54 on white, illegible. --- */
+  --color-accent: var(--yellow-400);
+  --color-accent-hover: var(--orange-500);
+  --color-on-accent: var(--ink-900);
+  --color-accent-warm: var(--orange-500);
+  --color-accent-warm-strong: var(--orange-600);
+
+  /* --- Critical (error/destructive) — ContactForm.tsx ONLY --- */
+  --color-critical: var(--critical-500);
+  --color-critical-strong: var(--critical-700);
+
+  /* --- Focus ring --- */
+  --color-focus: var(--focus-ring);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --font-sans: var(--font-body);
+  --font-serif: var(--font-heading);
+
+  /* --- Spacing rhythm — stops the drift between py-16 / py-16 sm:py-20 /
+     py-20 / py-24 sm:py-28 used for what is meant to be the same band. --- */
+  --spacing-band: 4rem;
+  --spacing-band-lg: 5rem;
+  --spacing-band-xl: 7rem;
+
+  /* --- Display type — paired line-height/letter-spacing so hero-scale
+     headings don't need an arbitrary leading-[…] value. --- */
+  --text-display: 3.75rem;
+  --text-display--line-height: 1.05;
+  --text-display--letter-spacing: -0.01em;
+
+  /* --- Semantic radii --- */
+  --radius-control: 0.25rem;
+  --radius-card: 0.5rem;
+  --radius-panel: 0.75rem;
+
+  /* --- Purple-tinted elevation (was neutral black) — value change only,
+     zero markup churn since shadow-sm/md/xl are already in use. --- */
+  --shadow-sm: 0 1px 2px 0 rgb(49 24 71 / 0.06);
+  --shadow-md: 0 4px 10px -2px rgb(49 24 71 / 0.12), 0 2px 4px -2px rgb(49 24 71 / 0.08);
+  --shadow-xl: 0 20px 40px -12px rgb(49 24 71 / 0.25);
+
+  /* --- Watermark opacity — was a magic 0.05 repeated in three places
+     (VMark's own 0.4 internal opacity compounds with this to ~2% net
+     alpha). Token'd and lifted slightly so the mark stays perceptible
+     on the purple surface. --- */
+  --opacity-watermark: 0.08;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+}
+
+/* Visible focus rings everywhere. One color, tuned to clear 3:1 against
+   every surface in the app (including the two blended /contact panels),
+   so no per-section override is ever needed. */
+:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/* Faint geometric grid, used sparingly behind the home hero. Purely
+   decorative — always paired with aria-hidden in markup. */
+.bg-grid-lines {
+  background-image:
+    linear-gradient(to right, currentColor 1px, transparent 1px),
+    linear-gradient(to bottom, currentColor 1px, transparent 1px);
+  background-size: 44px 44px;
+}
+
+/* Hero gradient wash — was three inline rgba() literals on page.tsx.
+   Built from theme tokens via color-mix() so no color literal survives
+   in any .tsx file. */
+.bg-hero-wash {
+  background-image:
+    radial-gradient(ellipse 70% 55% at 15% 0%, color-mix(in srgb, var(--color-accent) 12%, transparent), transparent),
+    radial-gradient(ellipse 60% 50% at 100% 100%, color-mix(in srgb, white 6%, transparent), transparent),
+    linear-gradient(180deg, color-mix(in srgb, var(--color-surface-inverted) 0%, transparent) 0%, color-mix(in srgb, var(--color-surface-inverted) 40%, transparent) 100%);
+}
+
+/*
+ * Dark mode — explicitly deferred, not implemented.
+ *
+ * ~40% of this site is already `surface-inverted` (purple); a page-level
+ * dark mode would put a dark band on a dark page and collapse the primary
+ * structural device. There are zero `dark:` variants today, so it would be
+ * net-new surface area, not a toggle on existing ones.
+ *
+ * If a theme toggle is ever added: (1) all primitives already live in
+ * :root, and semantic names already carry no lightness words, so the
+ * token layer itself doesn't need to change; (2) `@theme inline` inlines
+ * values at their use sites and blocks runtime overrides — that keyword
+ * must be dropped (to plain `@theme`) before any `--color-*` can be
+ * swapped at runtime via a `[data-theme]`/`.dark` selector.
+ */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
