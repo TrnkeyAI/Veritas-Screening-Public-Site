@@ -71,21 +71,12 @@ export default function Footer() {
             <ul className="mt-4 space-y-2 text-sm text-content-inverted-muted">
               <li>
                 <a
-                  href={`tel:${siteConfig.contact.phone.replace(/[^\d+]/g, "")}`}
-                  className="transition-colors hover:text-content-inverted"
-                >
-                  {siteConfig.contact.phone}
-                </a>
-              </li>
-              <li>
-                <a
                   href={`mailto:${siteConfig.contact.email}`}
                   className="transition-colors hover:text-content-inverted"
                 >
                   {siteConfig.contact.email}
                 </a>
               </li>
-              <li>{siteConfig.contact.address}</li>
             </ul>
           </div>
         </div>

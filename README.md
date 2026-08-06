@@ -33,9 +33,15 @@ particular:
   `https://app.veritas-screening.com`. The header/footer "Log In" button
   and the primary "Start a Background Check" CTA both resolve here as an
   external link (same tab, `rel="noopener"`).
-- `contact.*` fields are placeholders (see checklist below) — fill them in
-  and they'll propagate to the footer, `/contact`, and the dispute-intake
-  block on `/compliance`.
+- `contact.email` and `contact.disputeEmail` are the site's single published
+  contact point, `info@veritas-screening.com`, and propagate to the footer,
+  `/contact`, and the dispute-intake block on `/compliance`. There is no
+  phone number or mailing address published anywhere on the site — both
+  were interim values and have been removed. **`disputeEmail` currently
+  routes to the same general `info@` inbox as an interim measure.** FCRA
+  disputes carry statutory reinvestigation timelines, so a dedicated
+  `disputes@` mailbox (kept separate from general sales inquiries) is
+  better practice — worth revisiting once the client can provision one.
 - `siteConfig.services` holds all four services, but only **Employment
   Screening** and **Volunteer Screening** are confirmed offered by the
   client. **Executive & Partner Screening** and **International
@@ -115,12 +121,6 @@ string in the rendered page. Found via `grep -rn "PLACEHOLDER" src`:
 
 | Placeholder | File | Notes |
 |---|---|---|
-| `[[PLACEHOLDER: phone number]]` | `src/config/site.ts` (`contact.phone`) | Renders in footer and `/contact`. |
-| `[[PLACEHOLDER: general inquiries email]]` | `src/config/site.ts` (`contact.email`) | Renders in footer and `/contact`. |
-| `[[PLACEHOLDER: dispute intake email]]` | `src/config/site.ts` (`contact.disputeEmail`) | Renders in the "Dispute intake" box on `/compliance`. |
-| `[[PLACEHOLDER: dispute intake phone]]` | `src/config/site.ts` (`contact.disputePhone`) | Renders in the "Dispute intake" box on `/compliance`. |
-| `[[PLACEHOLDER: business hours]]` | `src/config/site.ts` (`contact.hours`) | Renders in footer and `/contact`. |
-| `[[PLACEHOLDER: mailing / office address]]` | `src/config/site.ts` (`contact.address`) | Renders in footer and `/contact`. |
 | `[[PLACEHOLDER: accreditation or affiliation 1]]` through `4` | `src/components/TrustBand.tsx` | Four badge slots in the trust band (shield / checkmark / lock / document icons). Rendered on `/` (full) and above the footer on `/about`, `/services`, `/compliance`, `/contact` (compact). |
 | `[[PLACEHOLDER: certification logos — client to supply image assets]]` | `src/components/TrustBand.tsx` | Full variant only (home page). Client to supply actual logo image assets. |
 | `[[PLACEHOLDER: metric value]]` / `[[PLACEHOLDER: metric label]]` (×3) | `src/components/TrustBand.tsx` | Stats strip, full variant only (home page). No metric may be invented — real, verified numbers only. |

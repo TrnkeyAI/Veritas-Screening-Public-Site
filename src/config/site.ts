@@ -50,16 +50,11 @@ export type SiteConfig = {
     ghlEmbedUrl: string;
   };
   contact: {
-    /** [[PLACEHOLDER: phone number]] */
-    phone: string;
-    /** [[PLACEHOLDER: general inquiries email]] */
+    /** General inquiries mailbox. Rendered in the footer and on /contact. */
     email: string;
-    /** [[PLACEHOLDER: consumer/dispute intake email]] */
+    /** Consumer/dispute intake mailbox. Rendered in the dispute intake
+     *  block on /compliance. */
     disputeEmail: string;
-    /** [[PLACEHOLDER: consumer/dispute intake phone]] */
-    disputePhone: string;
-    /** [[PLACEHOLDER: mailing / office address]] */
-    address: string;
   };
   /**
    * Section visibility flags for content the client hasn't supplied yet.
@@ -87,6 +82,11 @@ export type SiteConfig = {
      *  confirmed they still offer this — flip to true only once they
      *  confirm delivery. */
     showInternationalSearches: boolean;
+    /** Client proof-point block ("Not all background checks are the same"
+     *  section, home page) — verified source/record counts and other
+     *  client-specific figures. Flip to true once the client supplies
+     *  VERIFIED figures — never invent these. */
+    showWhyProofPoints: boolean;
   };
 };
 
@@ -176,11 +176,8 @@ export const siteConfig: SiteConfig = {
     ghlEmbedUrl: "",
   },
   contact: {
-    phone: "+1 205 500 9053",
-    email: "shawn@trnkeyai.com",
-    disputeEmail: "[[PLACEHOLDER: dispute intake email]]",
-    disputePhone: "[[PLACEHOLDER: dispute intake phone]]",
-    address: "3219 Bay Estates Circle, Miramar Beach, Florida 32550, United States",
+    email: "info@veritas-screening.com",
+    disputeEmail: "info@veritas-screening.com",
   },
   sections: {
     /** Accreditation/affiliation badge row. Flip to true once the client
@@ -194,6 +191,9 @@ export const siteConfig: SiteConfig = {
     showExecutiveScreening: true,
     /** International Searches service. Confirmed offered by the client. */
     showInternationalSearches: true,
+    /** Client proof-point block on the home page "Not all background
+     *  checks are the same" section. */
+    showWhyProofPoints: false,
   },
 };
 

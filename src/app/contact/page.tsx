@@ -44,19 +44,6 @@ export default function ContactPage() {
             >
               <div>
                 <h2 className="text-xs font-semibold uppercase tracking-wide text-accent">
-                  Phone
-                </h2>
-                <p className="mt-2 text-sm text-white/90">
-                  <a
-                    href={`tel:${siteConfig.contact.phone.replace(/[^\d+]/g, "")}`}
-                    className="transition-colors hover:text-content-inverted"
-                  >
-                    {siteConfig.contact.phone}
-                  </a>
-                </p>
-              </div>
-              <div>
-                <h2 className="text-xs font-semibold uppercase tracking-wide text-accent">
                   Email
                 </h2>
                 <p className="mt-2 text-sm text-white/90">
@@ -66,14 +53,6 @@ export default function ContactPage() {
                   >
                     {siteConfig.contact.email}
                   </a>
-                </p>
-              </div>
-              <div>
-                <h2 className="text-xs font-semibold uppercase tracking-wide text-accent">
-                  Address
-                </h2>
-                <p className="mt-2 text-sm text-white/90">
-                  {siteConfig.contact.address}
                 </p>
               </div>
               <div className="rounded-card border border-white/15 bg-white/10 p-5">

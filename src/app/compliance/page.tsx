@@ -1,9 +1,11 @@
 /**
- * NOTE TO CLIENT: The content on this page (FCRA rights summary, dispute
- * process, report-request process, privacy policy, and trafficking-victim
- * process) MUST be reviewed and approved by the client's legal counsel
- * before this page goes live. Nothing here should be treated as final
- * legal language until that review is complete.
+ * NOTE TO CLIENT: The content on this page (FCRA rights summary, California
+ * ICRAA summary, dispute process, report-request process, privacy policy,
+ * and trafficking-victim process) MUST be reviewed and approved by the
+ * client's legal counsel before this page goes live. Nothing here should be
+ * treated as final legal language until that review is complete. The
+ * California Residents section in particular still needs counsel to supply
+ * the state-specific disclosure and notice text — see the placeholder below.
  */
 import Link from "next/link";
 import type { Metadata } from "next";
@@ -18,6 +20,7 @@ export const metadata: Metadata = {
 
 const sections = [
   { id: "fcra-rights", label: "Your Rights Under the FCRA" },
+  { id: "california-residents", label: "California Residents" },
   { id: "dispute", label: "Filing a Dispute" },
   { id: "request-report", label: "Requesting a Copy of Your Report" },
   { id: "privacy-policy", label: "Privacy Policy" },
@@ -129,6 +132,98 @@ export default function CompliancePage() {
               </section>
 
               <section
+                id="california-residents"
+                className="scroll-mt-24 rounded-card border border-border bg-surface p-6 sm:p-8"
+              >
+                <h2 className="font-serif text-2xl font-semibold text-content-strong">
+                  California Residents
+                </h2>
+                <p className="mt-3 max-w-2xl text-sm leading-relaxed text-content-muted">
+                  California residents have additional rights under the
+                  state&apos;s Investigative Consumer Reporting Agencies Act
+                  (ICRAA), California Civil Code § 1786 et seq., which
+                  applies alongside the federal FCRA when an investigative
+                  consumer report is prepared about you.
+                </p>
+                <ul className="mt-4 space-y-3">
+                  <li className="flex items-start gap-3 text-sm leading-relaxed text-content">
+                    <svg
+                      className="mt-1 h-3.5 w-3.5 shrink-0 text-interactive"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth={2.5}
+                      aria-hidden="true"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                    You have the right to inspect the file an investigative
+                    consumer reporting agency holds on you (Cal. Civ. Code §
+                    1786.22).
+                  </li>
+                  <li className="flex items-start gap-3 text-sm leading-relaxed text-content">
+                    <svg
+                      className="mt-1 h-3.5 w-3.5 shrink-0 text-interactive"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth={2.5}
+                      aria-hidden="true"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                    Employers must give notice and obtain your authorization
+                    before obtaining an investigative consumer report about
+                    you, and you may request a copy of that report (Cal.
+                    Civ. Code § 1786.16).
+                  </li>
+                </ul>
+                <div className="mt-6 flex flex-col gap-3">
+                  <a
+                    href="https://leginfo.legislature.ca.gov/faces/codes_displayText.xhtml?lawCode=CIV&division=3.&title=1.6A.&part=4.&chapter=&article=1."
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center text-sm font-medium text-interactive underline decoration-interactive decoration-2 underline-offset-4 transition-colors duration-200 hover:text-interactive-hover"
+                  >
+                    Read: California Investigative Consumer Reporting
+                    Agencies Act (Cal. Civ. Code § 1786 et seq.)
+                    <span className="sr-only"> (opens in a new tab)</span>
+                  </a>
+                  <a
+                    href="https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=CIV&sectionNum=1786.22"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center text-sm font-medium text-interactive underline decoration-interactive decoration-2 underline-offset-4 transition-colors duration-200 hover:text-interactive-hover"
+                  >
+                    Cal. Civ. Code § 1786.22 — Right to Inspect Your File
+                    <span className="sr-only"> (opens in a new tab)</span>
+                  </a>
+                  <a
+                    href="https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?sectionNum=1786.16.&lawCode=CIV"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center text-sm font-medium text-interactive underline decoration-interactive decoration-2 underline-offset-4 transition-colors duration-200 hover:text-interactive-hover"
+                  >
+                    Cal. Civ. Code § 1786.16 — Notice and Authorization
+                    Requirements
+                    <span className="sr-only"> (opens in a new tab)</span>
+                  </a>
+                </div>
+                <p className="mt-6 max-w-2xl text-sm leading-relaxed text-content-muted">
+                  [[PLACEHOLDER: California-specific disclosures and notice
+                  text — client legal to supply]]
+                </p>
+              </section>
+
+              <section
                 id="dispute"
                 className="scroll-mt-24 rounded-card border border-border bg-surface p-6 sm:p-8"
               >
@@ -157,14 +252,17 @@ export default function CompliancePage() {
                     </li>
                   ))}
                 </ol>
+                {/* `disputeEmail` currently points at the general `info@`
+                    inbox as an interim route. FCRA disputes carry statutory
+                    reinvestigation timelines, so a dedicated `disputes@`
+                    mailbox (routed separately from general sales inquiries)
+                    is better practice once the client can provision one. */}
                 <div className="mt-6 rounded-card border border-border bg-surface-sunken p-6">
                   <p className="text-sm font-semibold text-content-strong">
                     Dispute intake
                   </p>
                   <p className="mt-2 text-sm leading-relaxed text-content-muted">
                     Email: {siteConfig.contact.disputeEmail}
-                    <br />
-                    Phone: {siteConfig.contact.disputePhone}
                     <br />
                     [[PLACEHOLDER: dispute intake form / mailing address]]
                   </p>
