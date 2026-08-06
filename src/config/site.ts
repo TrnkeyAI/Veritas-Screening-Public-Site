@@ -42,12 +42,26 @@ export type SiteConfig = {
   nav: NavItem[];
   services: Service[];
   /** Contact form provider. "builtin" renders the in-repo <ContactForm />;
-   *  "ghl" renders a GoHighLevel embed iframe at `ghlEmbedUrl`. Switch to
-   *  "ghl" once the embed URL is supplied — see README for the third-party
-   *  cookie/consent note that switch requires. */
+   *  "ghl" renders a GoHighLevel embed iframe at `ghlEmbedUrl`. Switch
+   *  `provider` back to "builtin" to restore the in-repo form — e.g. if the
+   *  client needs to fall back before the live GHL form is confirmed to be
+   *  receiving submissions. The `ghl*` fields below are copied verbatim
+   *  from the GHL form's own "embed code" (form settings → embed) — see
+   *  README for the third-party cookie/consent note this provider requires. */
   contactForm: {
     provider: "builtin" | "ghl";
+    /** `src` of the GHL embed iframe. */
     ghlEmbedUrl: string;
+    /** GHL's form id — drives the iframe's `id`, `data-form-id`, and
+     *  `data-layout-iframe-id`, which the GHL resize script keys off. */
+    ghlFormId: string;
+    /** GHL's form name — used for `data-form-name` and as the iframe's
+     *  accessible `title`. */
+    ghlFormName: string;
+    /** GHL's own stated embed height (`data-height` in their embed code),
+     *  in pixels. Used as the iframe's pre-script height so there's no
+     *  layout jump before the GHL resize script loads and takes over. */
+    ghlInitialHeight: number;
   };
   contact: {
     /** General inquiries mailbox. Rendered in the footer and on /contact. */
@@ -56,6 +70,12 @@ export type SiteConfig = {
      *  block on /compliance. */
     disputeEmail: string;
   };
+  /**
+   * Home page stat-card row (below the hero). Client-confirmed published
+   * figures — see the provenance comment above the config value for what
+   * each one is and how it should be re-verified over time.
+   */
+  stats: { value: string; label: string }[];
   /**
    * Section visibility flags for content the client hasn't supplied yet.
    * Every flag defaults to false so the site never shows an invented
@@ -87,13 +107,6 @@ export type SiteConfig = {
      *  client-specific figures. Flip to true once the client supplies
      *  VERIFIED figures — never invent these. */
     showWhyProofPoints: boolean;
-    /** MOCK stat-card row overlapping the hero (home page only, see
-     *  MOCK_STATS in page.tsx). Authorised for design review with
-     *  invented-but-labeled mock values — NOT the same guarantee as the
-     *  other flags above: it defaults to true, and this is the one flag
-     *  in this block that is NOT "false until verified." See the default
-     *  below for what must happen before launch. */
-    showMockStats: boolean;
   };
 };
 
@@ -179,13 +192,38 @@ export const siteConfig: SiteConfig = {
     },
   ],
   contactForm: {
-    provider: "builtin",
-    ghlEmbedUrl: "",
+    provider: "ghl",
+    ghlEmbedUrl: "https://api.leadconnectorhq.com/widget/form/10VJjJ1Cp6DxpDXimsm6",
+    ghlFormId: "10VJjJ1Cp6DxpDXimsm6",
+    ghlFormName: "Veritas Screening Contact Form",
+    ghlInitialHeight: 824,
   },
   contact: {
     email: "info@veritas-screening.com",
     disputeEmail: "info@veritas-screening.com",
   },
+  /**
+   * Client-confirmed published figures for the home page stat-card row.
+   * "7-year" is the FCRA statutory lookback period — an industry fact, not
+   * a claim about Veritas. The turnaround and "3,100+" cards are operational
+   * claims the client has confirmed and should re-confirm if operations change.
+   *
+   * On the turnaround card: the headline leads with the instant-search floor
+   * ("From 5 min") at the client's direction, with the standard-package range
+   * carried in the label. Keep the label — the two figures describe DIFFERENT
+   * search types. Instant database and SSN-trace searches return in minutes;
+   * county court searches do not. A headline of "From 5 min" without the
+   * qualifier reads as the typical speed for any check, which is the claim
+   * most likely to draw a customer complaint. Do not shorten this label.
+   */
+  stats: [
+    {
+      value: "From 5 min",
+      label: "Instant searches; standard checks 24–48 hrs",
+    },
+    { value: "3,100+", label: "U.S. counties searched at the source" },
+    { value: "7-year", label: "Standard FCRA lookback period" },
+  ],
   sections: {
     /** Accreditation/affiliation badge row. Flip to true once the client
      *  supplies VERIFIED credentials — never invent these. */
@@ -201,10 +239,6 @@ export const siteConfig: SiteConfig = {
     /** Client proof-point block on the home page "Not all background
      *  checks are the same" section. */
     showWhyProofPoints: false,
-    /** MOCK stat-card row on the home hero — see MOCK_STATS in page.tsx.
-     *  Defaults true for design review. MUST be set false — or the values
-     *  replaced with client-verified figures — before launch. */
-    showMockStats: true,
   },
 };
 

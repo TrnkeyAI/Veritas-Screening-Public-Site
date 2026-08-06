@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { siteConfig } from "@/config/site";
 import ContactForm from "./ContactForm";
 import TrustBand from "@/components/TrustBand";
@@ -28,11 +29,37 @@ export default function ContactPage() {
           <div className="mt-12 grid grid-cols-1 gap-8 lg:grid-cols-3 lg:gap-10">
             <div className="rounded-panel bg-surface p-6 shadow-xl sm:p-8 lg:col-span-2">
               {siteConfig.contactForm.provider === "ghl" ? (
-                <iframe
-                  title="Contact form"
-                  src={siteConfig.contactForm.ghlEmbedUrl}
-                  className="h-[720px] w-full rounded-control border-0"
-                />
+                <>
+                  <iframe
+                    src={siteConfig.contactForm.ghlEmbedUrl}
+                    style={{ height: siteConfig.contactForm.ghlInitialHeight }}
+                    id={`inline-${siteConfig.contactForm.ghlFormId}`}
+                    data-layout="{'id':'INLINE'}"
+                    data-trigger-type="alwaysShow"
+                    data-trigger-value=""
+                    data-activation-type="alwaysActivated"
+                    data-activation-value=""
+                    data-deactivation-type="neverDeactivate"
+                    data-deactivation-value=""
+                    data-form-name={siteConfig.contactForm.ghlFormName}
+                    data-height={siteConfig.contactForm.ghlInitialHeight}
+                    data-layout-iframe-id={`inline-${siteConfig.contactForm.ghlFormId}`}
+                    data-form-id={siteConfig.contactForm.ghlFormId}
+                    title={siteConfig.contactForm.ghlFormName}
+                    className="w-full rounded-control border-0"
+                  />
+                  {/* GHL's resize script reads the data-* attributes above and
+                      posts height updates to the iframe at runtime. Loaded
+                      afterInteractive (not lazyOnload): the form is the
+                      primary content of this page, so it should be resized
+                      to its real height, not the ghlInitialHeight fallback,
+                      as soon as the page is interactive rather than waiting
+                      for the browser to go idle. */}
+                  <Script
+                    src="https://link.msgsndr.com/js/form_embed.js"
+                    strategy="afterInteractive"
+                  />
+                </>
               ) : (
                 <ContactForm />
               )}

@@ -66,22 +66,6 @@ const steps = [
   },
 ];
 
-/**
- * MOCK VALUES — authorised by the client for design review ONLY.
- * These are NOT client-verified figures. They must be replaced with
- * numbers the client has confirmed in writing (or this row deleted)
- * before launch — see `sections.showMockStats` in src/config/site.ts,
- * which gates this row and must be flipped to `false` first. Of the
- * three, only the FCRA lookback period is an industry fact (a statutory
- * figure, not a claim about Veritas); the turnaround time and county
- * count are invented placeholders standing in for real Veritas figures.
- */
-const MOCK_STATS = [
-  { value: "24–48 hrs", label: "Typical turnaround, standard checks" },
-  { value: "3,100+", label: "U.S. counties searched at the source" },
-  { value: "7-year", label: "Standard FCRA lookback period" },
-];
-
 function ShieldIcon() {
   return (
     <svg
@@ -163,36 +147,35 @@ export default function Home() {
         </div>
       </section>
 
-      {/* MOCK stat-card row — see MOCK_STATS above. This sat overlapping the
-          hero's bottom edge as a scroll affordance; removed at the client's
-          request. The hero image has the podium and server detail right at
-          that edge, so the cards read as slicing through the artwork rather
-          than layering over it. Now a clean band below the hero. */}
-      {siteConfig.sections.showMockStats && (
-        <section className="bg-surface">
-          <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 gap-6 pt-band sm:grid-cols-3">
-              {MOCK_STATS.map((stat) => (
-                <div
-                  key={stat.label}
-                  className="rounded-card border border-border bg-surface p-6 text-center shadow-xl sm:text-left"
-                >
-                  <span
-                    aria-hidden="true"
-                    className="mx-auto block h-1 w-10 rounded-full bg-accent-warm-strong sm:mx-0"
-                  />
-                  <p className="mt-4 font-serif text-3xl font-semibold text-content-strong sm:text-4xl">
-                    {stat.value}
-                  </p>
-                  <p className="mt-2 text-sm leading-snug text-content-muted">
-                    {stat.label}
-                  </p>
-                </div>
-              ))}
-            </div>
+      {/* Stat-card row — see the provenance comment on `siteConfig.stats`.
+          This sat overlapping the hero's bottom edge as a scroll affordance;
+          removed at the client's request. The hero image has the podium and
+          server detail right at that edge, so the cards read as slicing
+          through the artwork rather than layering over it. Now a clean band
+          below the hero. */}
+      <section className="bg-surface">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 gap-6 pt-band sm:grid-cols-3">
+            {siteConfig.stats.map((stat) => (
+              <div
+                key={stat.label}
+                className="rounded-card border border-border bg-surface p-6 text-center shadow-xl sm:text-left"
+              >
+                <span
+                  aria-hidden="true"
+                  className="mx-auto block h-1 w-10 rounded-full bg-accent-warm-strong sm:mx-0"
+                />
+                <p className="mt-4 font-serif text-3xl font-semibold text-content-strong sm:text-4xl">
+                  {stat.value}
+                </p>
+                <p className="mt-2 text-sm leading-snug text-content-muted">
+                  {stat.label}
+                </p>
+              </div>
+            ))}
           </div>
-        </section>
-      )}
+        </div>
+      </section>
 
       {/* Services grid */}
       <section className="bg-surface">

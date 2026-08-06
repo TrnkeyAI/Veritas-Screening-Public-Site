@@ -52,6 +52,10 @@ particular:
   interest" select) reads the derived `visibleServices` export, never
   `siteConfig.services` directly, so they can't drift out of sync when a
   flag flips.
+- `siteConfig.stats` is the three-card stat row on the home page, directly
+  below the hero. Client-confirmed published figures — see the provenance
+  comment above the field in `site.ts` for what each value is and which
+  ones the client should re-confirm if operations change.
 
 ## Section visibility flags (`sections`)
 
@@ -68,7 +72,6 @@ each flag should only be flipped to `true` once the client has supplied
 | `showLeadership` | The "Leadership team" section on `/about`. | `/about` only. |
 | `showExecutiveScreening` | The **Executive & Partner Screening** service card/section. Not a content-verification flag like the others — this one gates a service the client has **not confirmed they still offer**. Flip to `true` only once the client confirms delivery. | Home services grid, `/services` anchor nav + section, ContactForm "service of interest" select (via `visibleServices`). |
 | `showInternationalSearches` | The **International Searches** service card/section. Same caveat as above — unconfirmed delivery, not just unverified content. | Home services grid, `/services` anchor nav + section, ContactForm "service of interest" select (via `visibleServices`). |
-| `showMockStats` | The three-card stat row (`MOCK_STATS` in `src/app/page.tsx`) pulled up over the hero's bottom edge. **Different guarantee than every other flag in this table**: it defaults to `true` and its values are explicitly-authorised MOCK numbers for design review, not verified client figures. Must be set back to `false` — or the values replaced with figures the client has confirmed in writing — before launch. | `/` only, immediately below the hero. |
 
 When both `showTrustBadges` and `showStats` are `false`, `TrustBand`
 renders `null` entirely — every call site (all five pages) is written to
@@ -85,33 +88,48 @@ just isn't rendered while its flag is `false`.
 ```ts
 contactForm: {
   provider: "builtin" | "ghl",
-  ghlEmbedUrl: "",
+  ghlEmbedUrl: "https://api.leadconnectorhq.com/widget/form/10VJjJ1Cp6DxpDXimsm6",
+  ghlFormId: "10VJjJ1Cp6DxpDXimsm6",
+  ghlFormName: "Veritas Screening Contact Form",
+  ghlInitialHeight: 824,
 }
 ```
 
-- `"builtin"` (current default) renders the in-repo `<ContactForm />` —
-  client-side validation only, does not send data anywhere (see Notes
-  below).
-- `"ghl"` renders a responsive, titled `<iframe>` pointed at
-  `ghlEmbedUrl`, replacing the built-in form.
+- `"builtin"` renders the in-repo `<ContactForm />` — client-side
+  validation only, does not send data anywhere (see Notes below). It stays
+  in the repo as the fallback this switch restores; do not delete it until
+  the client has confirmed the live GHL form (below) is actually receiving
+  submissions.
+- `"ghl"` (current default) renders the live GoHighLevel embed as a
+  titled `<iframe>`, matching GHL's own embed code attribute-for-attribute
+  (layout, trigger/activation/deactivation type, form id/name), plus the
+  `link.msgsndr.com/js/form_embed.js` resize script (loaded via
+  `next/script`, `strategy="afterInteractive"`, only on this branch) that
+  the client's GHL form settings generated. `ghlEmbedUrl`, `ghlFormId`,
+  `ghlFormName`, and `ghlInitialHeight` all come directly from that embed
+  code — re-copy all four together if the client regenerates it (e.g. a
+  new form id changes both the URL and the id fields).
+- Switch `provider` back to `"builtin"` (no other file needs to change) to
+  restore the in-repo form — e.g. as a fallback if the client reports the
+  live GHL form isn't receiving submissions.
 
-To switch to GoHighLevel once the client supplies the embed URL: paste it
-into `ghlEmbedUrl` and change `provider` to `"ghl"`. No other file needs
-to change.
-
-**Before flipping to `"ghl"`:** the GHL embed loads third-party
-script/iframe content and will likely set third-party cookies outside
-this site's control. This site currently ships with **no analytics, no
-cookie banner, and no third-party scripts** (see Notes below) — switching
-to the GHL provider will very likely require a consent notice and a
-privacy-policy update to disclose that third-party cookie use. That's a
-client/legal decision, flagged here and left unsolved; this change set
+**Third-party origins now loaded on `/contact` when `provider` is
+`"ghl"`:** `api.leadconnectorhq.com` (the form iframe) and
+`link.msgsndr.com` (the resize script). Both are third-party origins
+outside this site's control and can set third-party cookies. This site
+otherwise ships with **no analytics, no cookie banner, and no other
+third-party scripts** (see Notes below). Before launch, the `/privacy`
+page's "Cookies and Tracking Technologies" and "Disclosure to Third
+Parties" placeholders must be updated to specifically cover these two
+origins — and whether a consent notice is additionally required is a
+decision for the client's counsel, not resolved here. This change set
 does **not** add a consent banner.
 
-Once GHL is live and verified, `ContactForm.tsx` (and its
-`critical`/`border-critical`/`surface-critical` error-state styling — see
-the two color invariants above) can be deleted as a follow-up. It is the
-only remaining consumer of the `critical` token family.
+Once the client has confirmed the live GHL form is receiving submissions,
+`ContactForm.tsx` (and its `critical`/`border-critical`/`surface-critical`
+error-state styling — see the two color invariants above) can be deleted
+as a follow-up. It is the only remaining consumer of the `critical` token
+family.
 
 ## Placeholder checklist
 
@@ -210,12 +228,10 @@ be treated as final legal language until that review happens.
   them.** (1) `TrustBand`'s stats strip (`showStats`, above) is real
   structure with literal `[[PLACEHOLDER: ...]]` copy, stays off until the
   client supplies verified figures, and is untouched by the row below. (2)
-  The `MOCK_STATS` card row in `src/app/page.tsx` (`showMockStats`,
-  above) is a separate, purpose-built row with client-authorised MOCK
-  demo values for design review, sitting directly under the hero. They
-  render independently and are never meant to be visible-and-verified at
-  the same time in production — `showMockStats` must go back to `false`
-  before launch regardless of what happens to `showStats`.
+  The `siteConfig.stats` card row in `src/app/page.tsx`, sitting directly
+  under the hero, is real config with client-confirmed published figures
+  (see the provenance comment on that field) and renders ungated. They
+  render independently of one another.
 - The home hero image, `public/hero-records.webp` (928×1152), is a
   generated illustration — layered translucent record/folder planes with
   cross-referencing connector lines and a single gold scan line — self-
