@@ -7,8 +7,7 @@ const consumerLinks = [
   { label: "Your Rights Under the FCRA", href: "/compliance#fcra-rights" },
   { label: "Filing a Dispute", href: "/compliance#dispute" },
   { label: "Requesting a Copy of Your Report", href: "/compliance#request-report" },
-  { label: "Privacy Policy", href: "/compliance#privacy-policy" },
-  { label: "Victims of Human Trafficking", href: "/compliance#trafficking" },
+  { label: "Privacy Policy", href: "/privacy" },
 ];
 
 export default function Footer() {

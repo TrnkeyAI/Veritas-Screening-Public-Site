@@ -1,11 +1,10 @@
 /**
  * NOTE TO CLIENT: The content on this page (FCRA rights summary, California
- * ICRAA summary, dispute process, report-request process, privacy policy,
- * and trafficking-victim process) MUST be reviewed and approved by the
- * client's legal counsel before this page goes live. Nothing here should be
- * treated as final legal language until that review is complete. The
- * California Residents section in particular still needs counsel to supply
- * the state-specific disclosure and notice text — see the placeholder below.
+ * ICRAA summary, dispute process, and report-request process) MUST be
+ * reviewed and approved by the client's legal counsel before this page goes
+ * live. Nothing here should be treated as final legal language until that
+ * review is complete. The site's privacy policy now lives at /privacy,
+ * which is its own legal-review scaffold.
  */
 import Link from "next/link";
 import type { Metadata } from "next";
@@ -15,7 +14,7 @@ import TrustBand from "@/components/TrustBand";
 export const metadata: Metadata = {
   title: "Compliance & Your Rights",
   description:
-    "Your rights under the FCRA, how to file a dispute, how to request a copy of your report, our privacy policy, and resources for victims of human trafficking.",
+    "Your rights under the FCRA, how to file a dispute, and how to request a copy of your report.",
 };
 
 const sections = [
@@ -23,8 +22,6 @@ const sections = [
   { id: "california-residents", label: "California Residents" },
   { id: "dispute", label: "Filing a Dispute" },
   { id: "request-report", label: "Requesting a Copy of Your Report" },
-  { id: "privacy-policy", label: "Privacy Policy" },
-  { id: "trafficking", label: "Victims of Human Trafficking" },
 ];
 
 const fcraRights = [
@@ -217,10 +214,6 @@ export default function CompliancePage() {
                     <span className="sr-only"> (opens in a new tab)</span>
                   </a>
                 </div>
-                <p className="mt-6 max-w-2xl text-sm leading-relaxed text-content-muted">
-                  [[PLACEHOLDER: California-specific disclosures and notice
-                  text — client legal to supply]]
-                </p>
               </section>
 
               <section
@@ -252,6 +245,16 @@ export default function CompliancePage() {
                     </li>
                   ))}
                 </ol>
+                {/* 12 CFR §1022.142 (FCRA §605C) requires a consumer
+                    reporting agency to accept trafficking-related block
+                    requests at the same addresses used for FCRA §611
+                    disputes — so the existing dispute intake below is the
+                    correct, and statutorily required, channel; it must stay
+                    reachable. */}
+                <p className="mt-4 max-w-2xl text-sm leading-relaxed text-content-muted">
+                  Requests to block adverse information resulting from human
+                  trafficking are accepted through this same dispute intake.
+                </p>
                 {/* `disputeEmail` currently points at the general `info@`
                     inbox as an interim route. FCRA disputes carry statutory
                     reinvestigation timelines, so a dedicated `disputes@`
@@ -261,10 +264,18 @@ export default function CompliancePage() {
                   <p className="text-sm font-semibold text-content-strong">
                     Dispute intake
                   </p>
+                  {/* NOTE FOR LEGAL REVIEW: this intake is email-only by
+                      client instruction — the postal address was removed at
+                      their request. Flagging, not blocking: 12 CFR §1022.142
+                      requires a consumer reporting agency to provide mailing
+                      addresses for trafficking-related block submissions, and
+                      to accept them at the addresses used for FCRA §611
+                      disputes — which is this intake. Consumers also commonly
+                      dispute by mail. If counsel wants a postal route
+                      restored, add a `disputeAddress` field to
+                      `contact` in src/config/site.ts and render it below. */}
                   <p className="mt-2 text-sm leading-relaxed text-content-muted">
                     Email: {siteConfig.contact.disputeEmail}
-                    <br />
-                    [[PLACEHOLDER: dispute intake form / mailing address]]
                   </p>
                 </div>
               </section>
@@ -284,31 +295,6 @@ export default function CompliancePage() {
                   full name and enough identifying information for us to
                   locate your file. We will respond to verified requests
                   within the timeframe required by law.
-                </p>
-              </section>
-
-              <section
-                id="privacy-policy"
-                className="scroll-mt-24 rounded-card border border-border bg-surface p-6 sm:p-8"
-              >
-                <h2 className="font-serif text-2xl font-semibold text-content-strong">
-                  Privacy Policy
-                </h2>
-                <p className="mt-3 max-w-2xl text-sm leading-relaxed text-content-muted">
-                  [[PLACEHOLDER: full privacy policy text — client legal to
-                  supply]]
-                </p>
-              </section>
-
-              <section
-                id="trafficking"
-                className="scroll-mt-24 rounded-card border border-border bg-surface p-6 sm:p-8"
-              >
-                <h2 className="font-serif text-2xl font-semibold text-content-strong">
-                  Victims of Human Trafficking
-                </h2>
-                <p className="mt-3 max-w-2xl text-sm leading-relaxed text-content-muted">
-                  [[PLACEHOLDER: trafficking block process]]
                 </p>
               </section>
             </div>

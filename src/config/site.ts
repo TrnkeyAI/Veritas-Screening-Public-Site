@@ -87,6 +87,13 @@ export type SiteConfig = {
      *  client-specific figures. Flip to true once the client supplies
      *  VERIFIED figures — never invent these. */
     showWhyProofPoints: boolean;
+    /** MOCK stat-card row overlapping the hero (home page only, see
+     *  MOCK_STATS in page.tsx). Authorised for design review with
+     *  invented-but-labeled mock values — NOT the same guarantee as the
+     *  other flags above: it defaults to true, and this is the one flag
+     *  in this block that is NOT "false until verified." See the default
+     *  below for what must happen before launch. */
+    showMockStats: boolean;
   };
 };
 
@@ -194,6 +201,10 @@ export const siteConfig: SiteConfig = {
     /** Client proof-point block on the home page "Not all background
      *  checks are the same" section. */
     showWhyProofPoints: false,
+    /** MOCK stat-card row on the home hero — see MOCK_STATS in page.tsx.
+     *  Defaults true for design review. MUST be set false — or the values
+     *  replaced with client-verified figures — before launch. */
+    showMockStats: true,
   },
 };
 

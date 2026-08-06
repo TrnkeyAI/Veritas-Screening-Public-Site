@@ -68,6 +68,7 @@ each flag should only be flipped to `true` once the client has supplied
 | `showLeadership` | The "Leadership team" section on `/about`. | `/about` only. |
 | `showExecutiveScreening` | The **Executive & Partner Screening** service card/section. Not a content-verification flag like the others — this one gates a service the client has **not confirmed they still offer**. Flip to `true` only once the client confirms delivery. | Home services grid, `/services` anchor nav + section, ContactForm "service of interest" select (via `visibleServices`). |
 | `showInternationalSearches` | The **International Searches** service card/section. Same caveat as above — unconfirmed delivery, not just unverified content. | Home services grid, `/services` anchor nav + section, ContactForm "service of interest" select (via `visibleServices`). |
+| `showMockStats` | The three-card stat row (`MOCK_STATS` in `src/app/page.tsx`) pulled up over the hero's bottom edge. **Different guarantee than every other flag in this table**: it defaults to `true` and its values are explicitly-authorised MOCK numbers for design review, not verified client figures. Must be set back to `false` — or the values replaced with figures the client has confirmed in writing — before launch. | `/` only, immediately below the hero. |
 
 When both `showTrustBadges` and `showStats` are `false`, `TrustBand`
 renders `null` entirely — every call site (all five pages) is written to
@@ -205,6 +206,16 @@ be treated as final legal language until that review happens.
   `NOTE TO CLIENT` comments in that file before launch. It's also gated by
   `siteConfig.sections.showTrustBadges` / `showStats` — see "Section
   visibility flags" above.
+- **There are two, unrelated stat surfaces on the home page — don't confuse
+  them.** (1) `TrustBand`'s stats strip (`showStats`, above) is real
+  structure with literal `[[PLACEHOLDER: ...]]` copy, stays off until the
+  client supplies verified figures, and is untouched by the row below. (2)
+  The `MOCK_STATS` card row in `src/app/page.tsx` (`showMockStats`,
+  above) is a separate, purpose-built row with client-authorised MOCK
+  demo values for design review, sitting directly under the hero. They
+  render independently and are never meant to be visible-and-verified at
+  the same time in production — `showMockStats` must go back to `false`
+  before launch regardless of what happens to `showStats`.
 - The home hero image, `public/hero-records.webp` (928×1152), is a
   generated illustration — layered translucent record/folder planes with
   cross-referencing connector lines and a single gold scan line — self-
