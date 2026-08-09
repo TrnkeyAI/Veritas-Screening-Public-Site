@@ -27,7 +27,46 @@ export default function ContactPage() {
           </div>
 
           <div className="mt-12 grid grid-cols-1 gap-8 lg:grid-cols-3 lg:gap-10">
-            <div className="rounded-panel bg-surface p-6 shadow-xl sm:p-8 lg:col-span-2">
+            <div
+              className="rounded-panel bg-surface p-6 shadow-xl sm:p-8 lg:col-span-2"
+              // GHL's resize script briefly takes the iframe out of layout
+              // flow (position: absolute) while it hides/reveals it, which
+              // would otherwise collapse this panel to just its padding and
+              // break the two-column balance next to the aside. min-height
+              // holds the panel at the iframe's own pre-script height in
+              // the meantime — same justified-dimension exception as the
+              // iframe's height below.
+              style={
+                siteConfig.contactForm.provider === "ghl"
+                  ? { minHeight: siteConfig.contactForm.ghlInitialHeight }
+                  : undefined
+              }
+            >
+              {/* KNOWN ISSUE — VERIFY ON THE PRODUCTION DOMAIN BEFORE LAUNCH.
+                  On localhost this embed usually does NOT reveal. Both
+                  requests succeed (widget + form_embed.js return 200, no
+                  console errors), but GHL's script hides the iframe on load
+                  (opacity:0; visibility:hidden; position:absolute;
+                  left:-9999px) and only reveals it after the iframe posts a
+                  height message back. That handshake mostly doesn't complete
+                  here — observed stuck hidden for 18s+ at both 375 and 1280,
+                  and reproduced with a byte-for-byte copy of GHL's raw embed
+                  on a plain static page, so it is NOT caused by this code.
+                  Most likely GHL's per-form allowed-domains setting rejects
+                  `localhost` as the parent origin.
+
+                  FAILURE MODE IF IT ALSO FAILS IN PRODUCTION: visitors see an
+                  empty white panel with no form and no error — a dead contact
+                  page. To check: load /contact on the real domain and confirm
+                  the iframe's computed visibility is `visible` and its height
+                  has changed from ghlInitialHeight (the script resizes it on
+                  a successful handshake).
+
+                  IF IT FAILS THERE TOO, two fixes, either is fine:
+                  (a) add the domain to the form's allowed domains in GHL, or
+                  (b) set `contactForm.provider` back to "builtin" — the React
+                      form in ContactForm.tsx still works and is kept for
+                      exactly this. */}
               {siteConfig.contactForm.provider === "ghl" ? (
                 <>
                   <iframe

@@ -78,13 +78,23 @@ export default function Header() {
           ))}
         </nav>
 
-        <div className="hidden items-center gap-4 md:flex">
+        <div className="hidden items-center gap-3 md:flex">
           <Link
             href={siteConfig.LOGIN_URL}
             rel="noopener"
             className="rounded-control border border-content-strong px-4 py-2 text-sm font-medium text-content-strong transition-colors hover:bg-surface-inverted hover:text-content-inverted"
           >
             Log In
+          </Link>
+          {/* Primary action on a light surface uses `interactive` (blue), not
+              `accent` (yellow) — yellow is 1.54:1 on white and is restricted
+              to `surface-inverted` by the token invariant. */}
+          <Link
+            href={siteConfig.SIGNUP_URL}
+            rel="noopener"
+            className="rounded-control bg-interactive px-4 py-2 text-sm font-semibold text-on-interactive transition-colors hover:bg-interactive-hover"
+          >
+            Sign Up
           </Link>
         </div>
 
@@ -145,9 +155,17 @@ export default function Header() {
               </Link>
             ))}
             <Link
+              href={siteConfig.SIGNUP_URL}
+              rel="noopener"
+              className="mt-4 rounded-control bg-interactive px-4 py-3 text-center text-base font-semibold text-on-interactive hover:bg-interactive-hover"
+              onClick={() => setOpen(false)}
+            >
+              Sign Up
+            </Link>
+            <Link
               href={siteConfig.LOGIN_URL}
               rel="noopener"
-              className="mt-4 rounded-control border border-content-strong px-4 py-3 text-center text-base font-medium text-content-strong hover:bg-surface-inverted hover:text-content-inverted"
+              className="mt-3 rounded-control border border-content-strong px-4 py-3 text-center text-base font-medium text-content-strong hover:bg-surface-inverted hover:text-content-inverted"
               onClick={() => setOpen(false)}
             >
               Log In

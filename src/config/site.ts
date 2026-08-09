@@ -39,6 +39,11 @@ export type SiteConfig = {
   /** The client's screening-platform app. The "Log In" button and the
    *  primary CTA both point here — external, opens in the same tab. */
   LOGIN_URL: string;
+  /** Account signup on the same app. The header's "Sign Up" button points
+   *  here — external, same tab. Note the home hero's primary CTA still
+   *  points at LOGIN_URL; a first-time visitor has no account, so that CTA
+   *  is arguably better aimed here. */
+  SIGNUP_URL: string;
   nav: NavItem[];
   services: Service[];
   /** Contact form provider. "builtin" renders the in-repo <ContactForm />;
@@ -124,6 +129,7 @@ export const siteConfig: SiteConfig = {
     alt: "Veritas Screening",
   },
   LOGIN_URL: "https://app.veritas-screening.com",
+  SIGNUP_URL: "https://app.veritas-screening.com/signup",
   nav: [
     { label: "Services", href: "/services" },
     { label: "About", href: "/about" },
