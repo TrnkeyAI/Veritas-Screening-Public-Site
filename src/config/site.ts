@@ -36,13 +36,14 @@ export type SiteConfig = {
     /** Accessible name for the logo link/image, site-wide. */
     alt: string;
   };
-  /** The client's screening-platform app. The "Log In" button and the
-   *  primary CTA both point here — external, opens in the same tab. */
+  /** The client's screening-platform app. Used ONLY by the header's "Log In"
+   *  button — existing customers. External, opens in the same tab. */
   LOGIN_URL: string;
-  /** Account signup on the same app. The header's "Sign Up" button points
-   *  here — external, same tab. Note the home hero's primary CTA still
-   *  points at LOGIN_URL; a first-time visitor has no account, so that CTA
-   *  is arguably better aimed here. */
+  /** Account signup on the same app. Used by the header's "Sign Up" button
+   *  and by every prospect-facing "Start a Background Check" CTA (home hero,
+   *  home closing band, /services). Those CTAs deliberately point here and
+   *  NOT at LOGIN_URL — a first-time visitor has no account, so sending them
+   *  to a login screen is a funnel leak. External, same tab. */
   SIGNUP_URL: string;
   nav: NavItem[];
   services: Service[];

@@ -108,7 +108,7 @@ export default function ServicesPage() {
             together the right package.
           </p>
           <Link
-            href={siteConfig.LOGIN_URL}
+            href={siteConfig.SIGNUP_URL}
             rel="noopener"
             className="mt-6 inline-flex items-center justify-center rounded-control bg-accent px-6 py-3 text-sm font-semibold text-on-accent transition-colors duration-200 hover:bg-accent-hover"
           >

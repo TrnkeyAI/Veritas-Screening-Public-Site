@@ -130,7 +130,7 @@ export default function Home() {
             </p>
             <div className="mt-10 flex flex-col gap-4 sm:flex-row">
               <Link
-                href={siteConfig.LOGIN_URL}
+                href={siteConfig.SIGNUP_URL}
                 rel="noopener"
                 className="inline-flex items-center justify-center rounded-control bg-accent px-6 py-3 text-sm font-semibold text-on-accent transition-colors duration-200 hover:bg-accent-hover"
               >
@@ -322,7 +322,7 @@ export default function Home() {
             Ready to build a screening program that fits your team?
           </h2>
           <Link
-            href={siteConfig.LOGIN_URL}
+            href={siteConfig.SIGNUP_URL}
             rel="noopener"
             className="inline-flex shrink-0 items-center justify-center rounded-control bg-accent px-6 py-3 text-sm font-semibold text-on-accent transition-colors duration-200 hover:bg-accent-hover"
           >
