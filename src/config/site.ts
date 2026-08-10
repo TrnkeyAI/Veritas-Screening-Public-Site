@@ -113,6 +113,11 @@ export type SiteConfig = {
      *  client-specific figures. Flip to true once the client supplies
      *  VERIFIED figures — never invent these. */
     showWhyProofPoints: boolean;
+    /** /privacy page. The page holds no authored policy text — every
+     *  section is an unfilled placeholder marker — and must not be publicly
+     *  reachable until the client's counsel supplies real copy. Flip to
+     *  true the day the content lands. */
+    showPrivacyPolicy: boolean;
   };
 };
 
@@ -246,6 +251,9 @@ export const siteConfig: SiteConfig = {
     /** Client proof-point block on the home page "Not all background
      *  checks are the same" section. */
     showWhyProofPoints: false,
+    /** /privacy page. No authored policy text yet — keep hidden until
+     *  counsel supplies real copy. */
+    showPrivacyPolicy: false,
   },
 };
 

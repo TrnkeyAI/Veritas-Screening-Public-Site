@@ -5,6 +5,7 @@
  * for a CRA handling consumer report data) before this page goes live.
  */
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { siteConfig } from "@/config/site";
 import TrustBand from "@/components/TrustBand";
@@ -29,6 +30,12 @@ const sections = [
 ];
 
 export default function PrivacyPage() {
+  // No authored policy text exists yet (see NOTE TO CLIENT above) — keep the
+  // route a genuine 404 until siteConfig.sections.showPrivacyPolicy flips.
+  if (!siteConfig.sections.showPrivacyPolicy) {
+    notFound();
+  }
+
   return (
     <>
       {/* Intro — full-bleed inverted section */}

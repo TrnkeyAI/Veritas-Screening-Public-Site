@@ -7,7 +7,11 @@ const consumerLinks = [
   { label: "Your Rights Under the FCRA", href: "/compliance#fcra-rights" },
   { label: "Filing a Dispute", href: "/compliance#dispute" },
   { label: "Requesting a Copy of Your Report", href: "/compliance#request-report" },
-  { label: "Privacy Policy", href: "/privacy" },
+  // /privacy 404s until siteConfig.sections.showPrivacyPolicy flips — don't
+  // link to it until then.
+  ...(siteConfig.sections.showPrivacyPolicy
+    ? [{ label: "Privacy Policy", href: "/privacy" }]
+    : []),
 ];
 
 export default function Footer() {
