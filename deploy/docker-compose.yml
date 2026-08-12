@@ -1,0 +1,26 @@
+# Veritas Screening marketing site — Next.js static export served by nginx.
+#
+# Deliberately does NOT modify /opt/veritas/docker-compose.yml. That stack's
+# Traefik router already claims veritas-screening.com and www.*, but editing it
+# would require recreating veritas-app — the same operation behind the
+# 2026-08-05 SEV1 that destroyed stored report PDFs and uploaded identity
+# documents. Instead this router claims the two marketing hostnames at a higher
+# explicit priority, so Traefik prefers it and the veritas stack is untouched.
+#
+# To roll back: `docker compose down` here. Traefik immediately falls back to
+# the veritas-app router, which still matches both hostnames.
+services:
+  veritas-site:
+    image: nginx:alpine
+    container_name: veritas-site
+    restart: unless-stopped
+    volumes:
+      - /opt/veritas-site/html:/usr/share/nginx/html:ro
+      - /opt/veritas-site/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.veritas-site.rule=Host(`veritas-screening.com`) || Host(`www.veritas-screening.com`)"
+      - "traefik.http.routers.veritas-site.entrypoints=websecure"
+      - "traefik.http.routers.veritas-site.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.veritas-site.priority=1000"
+      - "traefik.http.services.veritas-site.loadbalancer.server.port=80"
