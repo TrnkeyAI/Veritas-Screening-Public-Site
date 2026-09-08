@@ -50,13 +50,23 @@ ssh "$VPS_HOST" \
 
 echo "==> Uploading $(find out -type f | wc -l | tr -d ' ') files to $VPS_HOST:$REMOTE_DIR"
 
-# COPYFILE_DISABLE stops macOS tar writing AppleDouble (._*) resource-fork
-# files alongside every real file. --delete removes files on the server that
-# no longer exist in the build, so a deleted page doesn't linger.
-COPYFILE_DISABLE=1 rsync -az --delete \
-  --exclude '._*' --exclude '.DS_Store' \
-  -e "ssh" \
-  out/ "$VPS_HOST:$REMOTE_DIR/"
+if command -v rsync >/dev/null 2>&1; then
+  # COPYFILE_DISABLE stops macOS tar writing AppleDouble (._*) resource-fork
+  # files alongside every real file. --delete removes files on the server that
+  # no longer exist in the build, so a deleted page doesn't linger.
+  COPYFILE_DISABLE=1 rsync -az --delete \
+    --exclude '._*' --exclude '.DS_Store' \
+    -e "ssh" \
+    out/ "$VPS_HOST:$REMOTE_DIR/"
+else
+  # rsync isn't installed on this machine's Git Bash (Windows). Fall back to
+  # clearing the remote folder and streaming a tarball over ssh, which gives
+  # the same "no stale files linger" guarantee as --delete.
+  echo "    (rsync not found locally, falling back to tar-over-ssh)"
+  ssh "$VPS_HOST" "find '$REMOTE_DIR' -mindepth 1 -delete"
+  tar czf - --exclude='._*' --exclude='.DS_Store' -C out . \
+    | ssh "$VPS_HOST" "tar xzf - -C '$REMOTE_DIR'"
+fi
 
 echo "==> Verifying against the VPS directly (bypasses DNS and local cache)"
 fail=0
