@@ -16,8 +16,7 @@
 
 set -euo pipefail
 
-VPS_HOST="${VPS_HOST:-root@2.25.185.39}"
-VPS_KEY="${VPS_KEY:-$HOME/.ssh/id_ed25519_veritas_vps}"
+VPS_HOST="${VPS_HOST:-egc-vps}"
 REMOTE_DIR="/opt/veritas-site/html"
 DOMAIN="www.veritas-screening.com"
 VPS_IP="2.25.185.39"
@@ -46,7 +45,7 @@ if [ ! -d out ]; then
 fi
 
 echo "==> Snapshotting the current live folder on the box for rollback"
-ssh -i "$VPS_KEY" -o BatchMode=yes "$VPS_HOST" \
+ssh "$VPS_HOST" \
   'rm -rf /opt/veritas-site/html.prev && cp -a /opt/veritas-site/html /opt/veritas-site/html.prev'
 
 echo "==> Uploading $(find out -type f | wc -l | tr -d ' ') files to $VPS_HOST:$REMOTE_DIR"
@@ -56,7 +55,7 @@ echo "==> Uploading $(find out -type f | wc -l | tr -d ' ') files to $VPS_HOST:$
 # no longer exist in the build, so a deleted page doesn't linger.
 COPYFILE_DISABLE=1 rsync -az --delete \
   --exclude '._*' --exclude '.DS_Store' \
-  -e "ssh -i $VPS_KEY -o BatchMode=yes" \
+  -e "ssh" \
   out/ "$VPS_HOST:$REMOTE_DIR/"
 
 echo "==> Verifying against the VPS directly (bypasses DNS and local cache)"
@@ -83,13 +82,13 @@ check "/privacy"     404
 
 if [ "$fail" -ne 0 ]; then
   echo "==> DEPLOY VERIFICATION FAILED — check the statuses above" >&2
-  echo "    Rollback:  ssh -i $VPS_KEY $VPS_HOST 'rm -rf /opt/veritas-site/html && mv /opt/veritas-site/html.prev /opt/veritas-site/html'" >&2
+  echo "    Rollback:  ssh $VPS_HOST 'rm -rf /opt/veritas-site/html && mv /opt/veritas-site/html.prev /opt/veritas-site/html'" >&2
   exit 1
 fi
 
 echo "==> Deployed OK"
 echo
 echo "    Rollback (restore previous build):"
-echo "      ssh -i $VPS_KEY $VPS_HOST 'rm -rf /opt/veritas-site/html && mv /opt/veritas-site/html.prev /opt/veritas-site/html'"
+echo "      ssh $VPS_HOST 'rm -rf /opt/veritas-site/html && mv /opt/veritas-site/html.prev /opt/veritas-site/html'"
 echo "    Rollback (drop the site entirely, fall back to the veritas app router):"
-echo "      ssh -i $VPS_KEY $VPS_HOST 'cd /opt/veritas-site && docker compose down'"
+echo "      ssh $VPS_HOST 'cd /opt/veritas-site && docker compose down'"
