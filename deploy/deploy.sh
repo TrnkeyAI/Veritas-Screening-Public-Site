@@ -13,11 +13,11 @@
 
 set -euo pipefail
 
-VPS_HOST="${VPS_HOST:-root@2.25.185.39}"
+VPS_HOST="${VPS_HOST:-root@2.25.242.181}"
 VPS_KEY="${VPS_KEY:-$HOME/.ssh/id_ed25519_veritas_vps}"
 REMOTE_DIR="/opt/veritas-site/html"
 DOMAIN="www.veritas-screening.com"
-VPS_IP="2.25.185.39"
+VPS_IP="2.25.242.181"
 
 cd "$(dirname "$0")/.."
 
